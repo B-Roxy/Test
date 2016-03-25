@@ -1,0 +1,3 @@
+﻿  les04.cpp
+d:\visual studio 2015\projects\les04\les04\les04.cpp(81): warning C4244: '=': conversion from 'std::streamoff' to 'long', possible loss of data
+  les04.vcxproj -> D:\Visual Studio 2015\Projects\les04\Debug\les04.exe

@@ -71,51 +71,53 @@ void binFIleLoad(int *A, int n)
 *	File37. Дан файл целых чисел. Удвоить его размер, записав в конец файла все его исходные элементы 
 *	(в обратном порядке). 
 */
-void file37(int n) {
+void file37() {
 	fstream fbnr;
 	long pos;
-	int numb;
+	int numb, count;
 
-	fbnr.open("dump1.bin", ios::binary|ios::in|ios::out);
+	cout << "\nf37\n";
+	fbnr.open("dump1.bin", ios::binary | ios::in | ios::out | ios::_Nocreate);
+	if (!fbnr.is_open()) {
+		cout << "File does not exist" << endl;
+		return;
+	}
 	fbnr.seekg(0, ios::end);
 	pos = fbnr.tellg();
-	for (int i = 0; i < n; i++) {
-		fbnr.seekg(pos - (i + 1) * sizeof(int), ios::beg);
+	count = pos / sizeof(int);
+	for (int i = 1; i <= count; i++) {
+		fbnr.seekg(pos - i * sizeof(int), ios::beg);
 		fbnr.read((char*)&numb, sizeof(int));
 		fbnr.seekg(pos + i * sizeof(int), ios::beg);
 		fbnr.write((char*)&numb, sizeof(int));
 	}
 	
 	fbnr.seekg(0, ios::beg);
-	fbnr.eof();
-	while (!fbnr.eof()){
-		fbnr.read((char*)&numb, sizeof(int));
+	while (fbnr.read((char*)&numb, sizeof(int)) && !fbnr.eof())
 		cout << numb << endl;
-	}
 	fbnr.close();
 }
 
 /**
 *	File39. Дан файл целых чисел. Продублировать в нем все числа, принадлежащие диапазону 5–10. 
 */
-void file39(int n) {
+void file39() {
 	fstream f39;
 	int numb;
 
-	f39.open("f39.bin", ios::binary|ios::in|ios::out);
+	cout << "\nf39\n";
 
-	for (int i = 0; i < n; i++) {
-		f39.read((char*)&numb, sizeof(int));
-		if (numb >= 5 && numb <= 10) {
-			f39.write((char*)&numb, sizeof(numb));
-		}
+	f39.open("f39.bin", ios::binary | ios::in | ios::out | ios::_Nocreate);
+	if (!f39.is_open()) {
+		cout << "File does not exist" << endl;
+		return;
 	}
-	/*cout << "\nf39\n";
+	while (f39.read((char*)&numb, sizeof(int)) && !f39.eof()) 
+		if (numb >= 5 && numb <= 10) 
+			f39.write((char*)&numb, sizeof(numb));
 	f39.seekg(0, ios::beg);
-	while (!f39.eof()) {
-		f39.read((char*)&numb, sizeof(int));
+	while (f39.read((char*)&numb, sizeof(int)) && !f39.eof()) 
 		cout << numb << "\t";
-	}*/
 	f39.close();
 }
 
@@ -123,22 +125,39 @@ void file39(int n) {
 *	File42. Даны два файла произвольного типа. Поменять местами их содержимое. 
 */
 void file42() {
-	fstream f1, f2, f3;
-	char c;
+	ifstream f1;
+	ofstream f2;
+	const short buf = 10;
+	char c[buf];
+	char n_f1[] = "dump1.bin", n_f2[] = "f39.bin", n_t[] = "temp.bin";
 
-	f1.open("dump1.bin", ios::binary | ios::out);
-	f2.open("temp.bin", ios::binary | ios::in);
+	f1.open(n_f1, ios::binary);
+	f2.open(n_t, ios::binary | ios::trunc);
 
-	while (!f1.eof()) {
-		f1.get()
+	while (f1.get(c, buf) && !f1.eof()) {
+		f2 << c;
 	}
-
+	f1.close();
+	f2.close();
+	rename(n_f2, n_f1);
+	rename(n_t, n_f1);
 }
 
 /**
 *	File44. Даны три файла одного и того же типа, но разного размера. 
 *	Заменить содержимое самого длинного файла на содержимое самого короткого. 
 */
+void file44() {
+	fstream f1, f2, f3;
+	
+	char nf1[] = "dump1.bin", nf2[] = "dump2.bin", nf3[] = "f39.bin";
+/*
+	f1.open(nf1, ios::binary | ios::in | ios::out | ios::_Nocreate);
+	f2.open(nf1, ios::binary | ios::in | ios::out | ios::_Nocreate);
+	f3.open(nf1, ios::binary | ios::in | ios::out | ios::_Nocreate);
+	*/
+
+}
 
 /**
 *	File47.Даны два файла одного и того же типа.
@@ -156,8 +175,9 @@ void main() {
 	/*input(A, n);
 	output(A, n);
 	binFIleSave(A, n);*/
-	file37(n);
-	file39(n);
+//	file37();
+//	file39();
+	file42();
 	//binFIleSaveInEnd(A, n);
 	
 	delete[] A;
